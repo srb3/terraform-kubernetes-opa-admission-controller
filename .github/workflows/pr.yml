@@ -22,7 +22,6 @@ jobs:
         with:
           minikube version: 'v1.18.1'
           kubernetes version: 'v1.20.2'
-          github token: ${{ secrets.GITHUB_TOKEN }}
       - name: install ingress
         run: |
           minikube addons enable ingress
