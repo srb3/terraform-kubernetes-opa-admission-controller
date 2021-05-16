@@ -1,0 +1,17 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: external-service03
+  annotations:
+    kubernetes.io/ingress.class: kong-kic1
+  namespace: service03
+spec:
+  rules:
+    - host: www.test.example.com
+      http:
+        paths:
+          - path: /mocks
+            backend:
+              serviceName: service03
+              servicePort: 80
