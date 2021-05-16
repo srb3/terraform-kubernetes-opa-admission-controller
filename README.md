@@ -53,11 +53,11 @@ work with the Kong ingress controller.
 
 ## Testing
 
-## Path collision
+### Path collision
 
 * A Kubernetes environment to use with kube config file at `~/.kube/config`
 
-### Run
+#### Run
 
 From the [path_collision_detection](./examples/path_collision_detection)
 directiory run:
@@ -67,7 +67,7 @@ make build
 make test
 ```
 
-### Test data
+#### Test data
 
 The test data is located [here](./examples/path_collision_detection/test/fixtures)
 content:
@@ -141,7 +141,7 @@ spec:
 
 ```
 
-### Results
+#### Results
 
 ``` bash
 $> make test
@@ -161,7 +161,7 @@ ingress.extensions/external-service03 created
 
 ```
 
-### Destroy
+#### Destroy
 
 ``` bash
 make clean
