@@ -128,7 +128,7 @@ metadata:
   name: external-service03
   annotations:
     kubernetes.io/ingress.class: kong-kic1
-  namespace: service0j
+  namespace: service03
 spec:
   rules:
     - host: www.test.example.com

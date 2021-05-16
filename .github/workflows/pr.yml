@@ -1,0 +1,45 @@
+name: PR Open
+
+on:
+  pull_request:
+    paths-ignore:
+      - '**/*.md'
+
+jobs:
+  deployment:
+    name: setup
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.14.8
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Minikube
+        uses: manusa/actions-setup-minikube@v2.3.0
+        with:
+          minikube version: 'v1.18.1'
+          kubernetes version: 'v1.20.2'
+          github token: ${{ secrets.GITHUB_TOKEN }}
+      - name: install ingress
+        run: |
+          minikube addons enable ingress
+          kubectl patch configmap -n kube-system nginx-load-balancer-conf --patch '{"data":{"proxy-buffer-size":"16k"}}'
+      - name: install metallb
+        run: |
+          minikube addons enable metallb
+          kubectl apply -f test/fixtures/minikube/cm.yaml
+        working-directory: examples/path_collision_detection/
+      - name: wait
+        run: while [[ $(kubectl -n kube-system get pods -l k8s-app=kube-dns -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo "waiting for pod" && sleep 1; done
+      - name: TF Create
+        run: |
+          make build
+          make test
+        working-directory: examples/path_collision_detection/
+      - name: TF Destroy
+        run: make clean
+        if: ${{ always() }}
+        working-directory: examples/path_collision_detection/
