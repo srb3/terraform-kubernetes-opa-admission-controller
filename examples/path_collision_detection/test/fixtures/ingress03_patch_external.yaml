@@ -1,0 +1,10 @@
+---
+spec:
+  rules:
+    - host: www.test.example.com
+      http:
+        paths:
+          - path: /mock
+            backend:
+              serviceName: service03
+              servicePort: 80
