@@ -1,6 +1,9 @@
-# terraform-kubernetes-opa-admission-controller
+# Path Collision Detection
 
-A Terraform module for provisioning an OPA admission controller onto Kubernetes
+This example calls the OPA module to deploy the OPA admission controller
+and passes through a rego policy file. That policy checks for ingress
+path collisions. If a collision is detected by OPA then the create
+request is denied before it gets to Kubernetes.
 
 ## Status
 
@@ -10,67 +13,25 @@ to facilitate testing OPA policies.
 
 ## Prerequisites
 
-### Using the module
+The example set up to run without any modifcation. But make sure
+you have Terraform installed, and a kube config file that points to a
+working and accessible Kubernetes cluster. If your kube config file is in a
+non default location then you will need to update kube_config_file variable
+in the [variables.tf](./variables.tf) or override it with a [terraform.tfvars](https://www.terraform.io/docs/language/values/variables.html#variable-definitions-tfvars-files)
+file or at [run time](https://www.terraform.io/docs/language/values/variables.html#environment-variables)
 
-This module utilises the Terraform Kubernetes provider (both alpha and stable)
-, so when including this module in your code you will need to specify
-the provider and args e.g.
-
-```hcl
-provider "kubernetes" {
-  config_path = "~/.kube/config"
-}
-
-provider "kubernetes-alpha" {
-  config_path = "~/.kube/config"
-}
-```
-
-## Usage
-
-```hcl
-locals {
-  ingress_conflicts = templatefile("${path.module}/templates/ingress-path-conflicts.rego", {})
-}
-
-module "opa-deploy" {
-  source = "srb3/opa-admission-controller/kubernetes"
-  policies = {
-    "ingress-conflicts" = {
-      data = local.ingress_conflicts
-    }
-  }
-}
-```
-
-An examples of how to use the module is in the examples directory.
-Currently there is only a path collision detection example.
-
-The `path_collision_detection` deploys OPA admission controller,
-with one policy. The policy denies the creation of ingress entries
-if another entry exists with the same path. This use case is designed to
-work with the Kong ingress controller.
-
-## Testing
-
-### Path collision
-
-* A Kubernetes environment to use with kube config file at `~/.kube/config`
-
-#### Run
-
-From the [path_collision_detection](./examples/path_collision_detection)
-directiory run:
+### Usage
 
 ``` bash
 make build
 make test
 ```
 
-#### Test data
+### Test data
 
 The test data is located [here](./examples/path_collision_detection/test/fixtures)
-content:
+
+#### Test data content
 
 ingress01_external.yaml:
 
