@@ -116,9 +116,12 @@ kubectl apply -f test/fixtures/ingress02_external.yaml || true
 Error from server (invalid ingress path "/mock" (conflicts with service01/external-service01)): error when creating "test/fixtures/ingress02_external.yaml": admission webhook "validating-webhook.openpolicyagent.org" denied the request: invalid ingress path "/mock" (conflicts with service01/external-service01)
 
 ingress03 should succeed
-kubectl apply -f test/fixtures/ingress03_external.yaml
+Warning: extensions/v1beta1 Ingress is deprecated in v1.14+, unavailable in v1.22+; use networking.k8s.io/v1 Ingress
 ingress.extensions/external-service03 created
 
+ingress03 patch should fail
+kubectl -n service03 patch -f test/fixtures/ingress03_external.yaml --type="strategic" --patch-file test/fixtures/ingress03_patch_external.yaml || true
+Error from server (invalid ingress path "/mock" (conflicts with service01/external-service01)): admission webhook "validating-webhook.openpolicyagent.org" denied the request: invalid ingress path "/mock" (conflicts with service01/external-service01)
 
 ```
 

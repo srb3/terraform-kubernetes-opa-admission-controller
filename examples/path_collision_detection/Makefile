@@ -23,6 +23,9 @@ test_path_collision:
 	@echo ""
 	@echo "ingress03 should succeed"
 	kubectl apply -f test/fixtures/ingress03_external.yaml
+	@echo ""
+	@echo "ingress03 patch should fail"
+	kubectl -n service03 patch -f test/fixtures/ingress03_external.yaml --type="strategic" --patch-file test/fixtures/ingress03_patch_external.yaml || true
 
 clean_test_path_collision:
 	@echo "ingress01 cleaned"
