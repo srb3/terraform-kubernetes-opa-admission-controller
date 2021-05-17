@@ -255,8 +255,3 @@ resource "kubernetes_config_map" "this-config-map" {
 
   depends_on = [kubernetes_manifest.this-k8-manifest]
 }
-
-locals {
-  cluster_ip = kubernetes_service.this-service.spec.0.cluster_ip
-  port       = kubernetes_service.this-service.spec.0.port.0.port
-}
