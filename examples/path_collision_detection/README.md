@@ -102,6 +102,21 @@ spec:
 
 ```
 
+ingress03_patch_external.yaml:
+
+```yaml
+---
+spec:
+  rules:
+    - host: www.test.example.com
+      http:
+        paths:
+          - path: /mock
+            backend:
+              serviceName: service03
+              servicePort: 80
+```
+
 #### Results
 
 ``` bash
